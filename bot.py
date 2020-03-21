@@ -1,9 +1,48 @@
 import tweepy
+import time
 
-auth = tweepy.OAuthHandler('PsoryXV0EemONu6lqVoRPkZqj', '28HyWsExTeYHAhazOL2nN69XTdC9gL1p9sMTInMlki48w3JQJV')
-auth.set_access_token('1240768744810582018-R7J1pMA7dKjLSmKjksKL3NgbRmQKsk', 'fOh7mjcFrEO65bIBwJ2eHuiI6W5Uyg440MyiH22pupxWs')
+consumer_key = ''
+consumer_secret = ''
+access_token = ''
+access_token_secret = ''
 
 api = tweepy.API(auth)
 user = api.me()
-print(user.screen_name)
-    
+
+def limit_handler(cursor):
+    try:
+        while True:
+            yield cursor.next()
+    except tweepy.RateLimitError:
+        time.sleep(300)
+
+
+bot that follows back named users, or followers based on followers count
+for follower in limit_handler(tweepy.Cursor(api.followers).items()):
+    #print(follower.name)           #giving us the list of followers
+    # if follower.name == 'followernameontwitter':
+    #     follower.follow()
+    #     break
+    if follower.followers_count > 1000:
+        follower.follow()
+        break
+
+# bot that follows or likes based on a used term
+search_string = '#100DaysOfCode'
+numberOfTweets = 100
+
+for tweet in tweepy.Cursor(api.search, search_string).items(numberOfTweets):
+        try:
+            tweet.favorite()
+            print('I liked that tweet')
+        except tweepy.TweepError as e:
+            print(e.reason)
+        except StopIteration:
+            break
+
+
+
+
+
+
+
