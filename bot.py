@@ -17,7 +17,7 @@ def limit_handler(cursor):
         time.sleep(300)
 
 
-bot that follows back named users, or followers based on followers count
+#bot that follows back named users, or followers based on followers count
 for follower in limit_handler(tweepy.Cursor(api.followers).items()):
     #print(follower.name)           #giving us the list of followers
     # if follower.name == 'followernameontwitter':
